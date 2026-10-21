@@ -4,7 +4,7 @@ include 'classes/dbh.classes.php';
 try {
   $username = "root";
   $password = "";
-  $pdo = new PDO('mysql:host=localhost;dbname=ooplogin', $username, $password);
+  $pdo = new PDO('mysql:host=127.0.0.1;port=3307;dbname=hardware_store;charset=utf8mb4', $username, $password);
 } catch (PDOException $e) {
   print "Error!: " . $e->getMessage() . "<br/>";
   die();
@@ -12,7 +12,7 @@ try {
 
 $stmt = $pdo->prepare('SELECT * FROM products ORDER BY price DESC LIMIT 3');
 $stmt->execute();
-$najskuplja = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$featuredProducts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (isset($_POST['id'])) {
   $productId = $_POST['id'];
@@ -37,9 +37,9 @@ if (isset($_POST['id'])) {
         'quantity' => $quantity
       );
     }
-    echo "Proizvod je dodan u košaricu.";
+    echo "Product added to cart.";
   } else {
-    echo "Proizvod ne postoji.";
+    echo "Product not found.";
   }
 }
 ?>
@@ -66,7 +66,7 @@ if (isset($_POST['id'])) {
         url: form.attr('action'),
         data: form.serialize(),
         success: function(response) {
-          var message = $('<div class="alert alert-success">Proizvod je dodan u košaricu.</div>'); 
+          var message = $('<div class="alert alert-success">Product added to cart.</div>'); 
           $('#message').html(message); 
           setTimeout(function() {
             message.remove(); 
@@ -76,7 +76,7 @@ if (isset($_POST['id'])) {
     });
     
     $('.btn.btn-primary').click(function() {
-      var message = $('<div class="alert alert-success">Proizvod je dodan u košaricu.</div>'); 
+      var message = $('<div class="alert alert-success">Product added to cart.</div>'); 
       $('#message').html(message); 
       setTimeout(function() {
         message.remove(); 
@@ -97,15 +97,15 @@ if (isset($_POST['id'])) {
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav me-auto">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="ref/grafickalogo.png" width="40px" height="40px"></a>
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="ref/graphics-card-icon.png" width="40px" height="40px"></a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="Procesori.php">Processors</a></li>
+                <li><a class="dropdown-item" href="processors.php">Processors</a></li>
                 <li><a class="dropdown-item" href="VideoCards.php">Video Cards</a></li>
-                <li><a class="dropdown-item" href="Maticne.php">Motherborads</a></li>
-                <li><a class="dropdown-item" href="Kucista.php">Cases</a></li>
-                <li><a class="dropdown-item" href="Napajanja.php">Power Supplies</a></li>
+                <li><a class="dropdown-item" href="motherboards.php">Motherboards</a></li>
+                <li><a class="dropdown-item" href="cases.php">Cases</a></li>
+                <li><a class="dropdown-item" href="power-supplies.php">Power Supplies</a></li>
                 <li><a class="dropdown-item" href="RAM.php">RAM</a></li>
-                <li><a class="dropdown-item" href="Diskovi.php">Storage</a></li>
+                <li><a class="dropdown-item" href="storage.php">Storage</a></li>
               </ul>
             </li>
             <li class="nav-item">
@@ -146,7 +146,7 @@ if (isset($_POST['id'])) {
   <div class="container">
     <h3>Featured products</h3>
     <div class="row g-3">
-      <?php foreach ($najskuplja as $product) : ?>
+      <?php foreach ($featuredProducts as $product) : ?>
         <div class="col-12 col-md-6 col-lg-4">
           <div class="card">
             <a href="product.php?page=product&id=<?= $product['id'] ?>">

@@ -23,10 +23,10 @@ class SignupContr extends Signup
             header("location: ../home.php?error=emptyinput");
             exit();
         }
-        /*if ($this->invalidName() == false) {
-            header("location: ../home.php?error=name");
-            exit();
-        }*/
+        
+
+
+
         if ($this->invalidEmail() == false) {
             header("location: ../home.php?error=email");
             exit();

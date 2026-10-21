@@ -3,7 +3,7 @@ session_start();
 
 $username = "root";
 $password = "";
-$db = new PDO('mysql:host=localhost;dbname=ooplogin', $username, $password);
+$db = new PDO('mysql:host=127.0.0.1;port=3307;dbname=hardware_store;charset=utf8mb4', $username, $password);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
   $productId = $_POST['id'];
@@ -20,9 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
       'price' => $product['price'],
       'quantity' => $quantity
     ];
-    echo "Proizvod je dodan u košaricu.";
+    echo "Product added to cart.";
   } else {
-    echo "Proizvod ne postoji.";
+    echo "Product not found.";
   }
 }
 
@@ -32,7 +32,7 @@ if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
   }
   echo "</table>";
 } else {
-  echo "Košarica je prazna.";
+  echo "Your cart is empty.";
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_quantity'])) {
@@ -40,9 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_quantity'])) {
   $quantity = $_POST['quantity'];
   if (isset($_SESSION['cart'][$productId])) {
     $_SESSION['cart'][$productId]['quantity'] = $quantity;
-    echo "Količina proizvoda je ažurirana.";
+    echo "Product quantity updated.";
   } else {
-    echo "Proizvod ne postoji u košarici.";
+    echo "Product is not in the cart.";
   }
 }
 
@@ -50,9 +50,9 @@ if (isset($_GET['remove'])) {
   $productId = $_GET['remove'];
   if (isset($_SESSION['cart'][$productId])) {
     unset($_SESSION['cart'][$productId]);
-    echo "Proizvod je uklonjen iz košarice.";
+    echo "Product removed from cart.";
   } else {
-    echo "Proizvod ne postoji u košarici.";
+    echo "Product is not in the cart.";
   }
 }
 ?>
@@ -85,15 +85,15 @@ if (isset($_GET['remove'])) {
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav me-auto">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="ref/grafickalogo.png" width="40px" height="40px"></a>
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="ref/graphics-card-icon.png" width="40px" height="40px"></a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="Procesori.php">Processors</a></li>
+                <li><a class="dropdown-item" href="processors.php">Processors</a></li>
                 <li><a class="dropdown-item" href="VideoCards.php">Video Cards</a></li>
-                <li><a class="dropdown-item" href="Maticne.php">Motherborads</a></li>
-                <li><a class="dropdown-item" href="Kucista.php">Cases</a></li>
-                <li><a class="dropdown-item" href="Napajanja.php">Power Supplies</a></li>
+                <li><a class="dropdown-item" href="motherboards.php">Motherboards</a></li>
+                <li><a class="dropdown-item" href="cases.php">Cases</a></li>
+                <li><a class="dropdown-item" href="power-supplies.php">Power Supplies</a></li>
                 <li><a class="dropdown-item" href="RAM.php">RAM</a></li>
-                <li><a class="dropdown-item" href="Diskovi.php">Storage</a></li>
+                <li><a class="dropdown-item" href="storage.php">Storage</a></li>
               </ul>
             </li>
             <li class="nav-item">
@@ -159,7 +159,7 @@ if (isset($_GET['remove'])) {
                   <td data-th="Price"><?= $product['price'] ?></td>
                   <td data-th="Quantity">
                     <input type="number" name="quantity" value="<?= $product['quantity'] ?>" min="1" class="quantity-input">
-                    <button class="update-button" data-id="<?= $productId ?>">Ažuriraj</button>
+                    <button class="update-button" data-id="<?= $productId ?>">Update</button>
 
                     <script>
                     $(document).ready(function() {
@@ -176,9 +176,9 @@ if (isset($_GET['remove'])) {
                           },
                           success: function(response) {
                             var data = JSON.parse(response);
-                            alert(data.message); // Ispisujemo poruku iz odgovora
+                            alert(data.message);  
 
-                            // Ažuriranje subtotala
+                             
                             var totalPrice = 0;
                             for (var key in data.cart) {
                               if (data.cart.hasOwnProperty(key)) {
@@ -195,7 +195,7 @@ if (isset($_GET['remove'])) {
                   </td>
                   <td class="actions" data-th="">
                     <div class="text-right">
-                      <a href="cart.php?remove=<?= $productId ?>">Ukloni</a>
+                      <a href="cart.php?remove=<?= $productId ?>">Remove</a>
                     </div>
                   </td>
                 </tr>
@@ -215,10 +215,10 @@ if (isset($_GET['remove'])) {
       </div>
       <div class="row mt-4 d-flex align-items-center">
         <div class="col-sm-6 order-md-2 text-right">
-          <a href="catalog.html" class="btn btn-primary mb-4 btn-lg pl-5 pr-5">Checkout</a>
+          <a href="home.php" class="btn btn-primary mb-4 btn-lg pl-5 pr-5">Checkout</a>
         </div>
         <div class="col-sm-6 mb-3 mb-m-1 order-md-1 text-md-left">
-          <a href="catalog.html">
+          <a href="home.php">
             <i class="fas fa-arrow-left mr-2"></i> Continue Shopping</a>
         </div>
       </div>
@@ -321,5 +321,6 @@ if (isset($_GET['remove'])) {
 </body>
 
 </html>
+
 
 

@@ -5,12 +5,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
   $productId = $_POST['id'];
   $quantity = $_POST['quantity'];
 
-  // Povezivanje s bazom podataka
+   
   $username = "root";
   $password = "";
-  $db = new PDO('mysql:host=localhost;dbname=ooplogin', $username, $password);
+  $db = new PDO('mysql:host=127.0.0.1;port=3307;dbname=hardware_store;charset=utf8mb4', $username, $password);
 
-  // Provjera postojanja proizvoda
+   
   $stmt = $db->prepare("SELECT * FROM products WHERE id = :id");
   $stmt->execute(['id' => $productId]);
   $product = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -23,19 +23,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         $totalPrice += $product['price'] * $product['quantity'];
       }
       echo json_encode(array(
-        'message' => 'Količina proizvoda je ažurirana.',
+        'message' => 'Product quantity updated.',
         'cart' => $_SESSION['cart'],
         'totalPrice' => $totalPrice
       ));
     } else {
       echo json_encode(array(
-        'message' => 'Proizvod ne postoji u košarici.'
+        'message' => 'Product is not in the cart.'
       ));
     }
   } else {
     echo json_encode(array(
-      'message' => 'Proizvod ne postoji.'
+      'message' => 'Product not found.'
     ));
   }
 }
 ?>
+

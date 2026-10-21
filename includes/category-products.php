@@ -1,20 +1,3 @@
-<?php
-session_start();
-include 'classes/dbh.classes.php';
-try {
-  $username = "root";
-  $password = "";
-  $pdo = new PDO('mysql:host=localhost;dbname=ooplogin', $username, $password);
-} catch (PDOException $e) {
-  print "Error!: " . $e->getMessage() . "<br/>";
-  die();
-}
-
-$stmt = $pdo->prepare('SELECT * FROM products WHERE type="Motherborad" LIMIT 1');
-$stmt->execute();
-$motherboard = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,15 +24,15 @@ $motherboard = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav me-auto">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="ref/grafickalogo.png" width="40px" height="40px"></a>
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="ref/graphics-card-icon.png" width="40px" height="40px"></a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="Procesori.php">Processors</a></li>
+                <li><a class="dropdown-item" href="processors.php">Processors</a></li>
                 <li><a class="dropdown-item" href="VideoCards.php">Video Cards</a></li>
-                <li><a class="dropdown-item" href="Maticne.php">Motherborads</a></li>
-                <li><a class="dropdown-item" href="Kucista.php">Cases</a></li>
-                <li><a class="dropdown-item" href="Napajanja.php">Power Supplies</a></li>
+                <li><a class="dropdown-item" href="motherboards.php">Motherboards</a></li>
+                <li><a class="dropdown-item" href="cases.php">Cases</a></li>
+                <li><a class="dropdown-item" href="power-supplies.php">Power Supplies</a></li>
                 <li><a class="dropdown-item" href="RAM.php">RAM</a></li>
-                <li><a class="dropdown-item" href="Diskovi.php">Storage</a></li>
+                <li><a class="dropdown-item" href="storage.php">Storage</a></li>
               </ul>
             </li>
             <li class="nav-item">
@@ -79,9 +62,9 @@ $motherboard = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
   <div class="container">
-    <h3>Motherborads</h3>
+    <h3><?= $categoryTitle ?></h3>
     <div class="row g-3">
-      <?php foreach ($motherboard as $products) : ?>
+      <?php foreach ($categoryProducts as $products) : ?>
         <div class="col-12 col-md-6 col-lg-4">
           <div class="card">
             <a href="product.php?page=product&id=<?= $products['id'] ?>">

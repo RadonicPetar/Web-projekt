@@ -22,15 +22,15 @@
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav me-auto">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="ref/grafickalogo.png" width="40px" height="40px"></a>
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="ref/graphics-card-icon.png" width="40px" height="40px"></a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="Procesori.php">Processors</a></li>
+              <li><a class="dropdown-item" href="processors.php">Processors</a></li>
               <li><a class="dropdown-item" href="VideoCards.php">Video Cards</a></li>
-              <li><a class="dropdown-item" href="Maticne.php">Motherborads</a></li>
-              <li><a class="dropdown-item" href="Kucista.php">Cases</a></li>
-              <li><a class="dropdown-item" href="Napajanja.php">Power Supplies</a></li>
+              <li><a class="dropdown-item" href="motherboards.php">Motherboards</a></li>
+              <li><a class="dropdown-item" href="cases.php">Cases</a></li>
+              <li><a class="dropdown-item" href="power-supplies.php">Power Supplies</a></li>
               <li><a class="dropdown-item" href="RAM.php">RAM</a></li>
-              <li><a class="dropdown-item" href="Diskovi.php">Storage</a></li>
+              <li><a class="dropdown-item" href="storage.php">Storage</a></li>
             </ul>
           </li>
           <li class="nav-item">

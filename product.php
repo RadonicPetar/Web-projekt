@@ -4,7 +4,7 @@ include 'classes/dbh.classes.php';
 try {
     $username = "root";
     $password = "";
-    $pdo = new PDO('mysql:host=localhost;dbname=ooplogin', $username, $password);
+    $pdo = new PDO('mysql:host=127.0.0.1;port=3307;dbname=hardware_store;charset=utf8mb4', $username, $password);
 } catch (PDOException $e) {
     print "Error!: " . $e->getMessage() . "<br/>";
     die();
@@ -44,9 +44,9 @@ if (isset($_POST['id'])) {
           'quantity' => $quantity
         );
       }
-      echo "Proizvod je dodan u košaricu.";
+      echo "Product added to cart.";
     } else {
-      echo "Proizvod ne postoji.";
+      echo "Product not found.";
     }
   }
 ?>
@@ -62,7 +62,6 @@ if (isset($_POST['id'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-    <link rel="stylesheet" href="product.css" class="">
     <script src="https://kit.fontawesome.com/d7256736fd.js" crossorigin="anonymous"></script>
 
 </head>
@@ -79,15 +78,15 @@ if (isset($_POST['id'])) {
                 <div class="collapse navbar-collapse" id="collapsibleNavbar">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="ref/grafickalogo.png" width="40px" height="40px"></a>
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="ref/graphics-card-icon.png" width="40px" height="40px"></a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="Procesori.php">Processors</a></li>
+                                <li><a class="dropdown-item" href="processors.php">Processors</a></li>
                                 <li><a class="dropdown-item" href="VideoCards.php">Video Cards</a></li>
-                                <li><a class="dropdown-item" href="Maticne.php">Motherborads</a></li>
-                                <li><a class="dropdown-item" href="Kucista.php">Cases</a></li>
-                                <li><a class="dropdown-item" href="Napajanja.php">Power Supplies</a></li>
+                                <li><a class="dropdown-item" href="motherboards.php">Motherboards</a></li>
+                                <li><a class="dropdown-item" href="cases.php">Cases</a></li>
+                                <li><a class="dropdown-item" href="power-supplies.php">Power Supplies</a></li>
                                 <li><a class="dropdown-item" href="RAM.php">RAM</a></li>
-                                <li><a class="dropdown-item" href="Diskovi.php">Storage</a></li>
+                                <li><a class="dropdown-item" href="storage.php">Storage</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -123,7 +122,7 @@ if (isset($_POST['id'])) {
                 <div class="fs-5 mb-5">
                     <span><?= $products['price'] ?>$</span>
                 </div>
-                <p class="lead"><?= $products['opis'] ?></p>
+                <p class="lead"><?= $products['description'] ?></p>
                 <form method="POST" action="home.php">
                     <input type="hidden" name="id" value="<?= $products['id'] ?>">
                     <div class="d-flex">
