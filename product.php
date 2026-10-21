@@ -90,7 +90,7 @@ if (isset($_POST['id'])) {
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="signUp.php"><img src="ref/sighup.png" width="40px" height="40px"></a>
+                            <a class="nav-link" href="signUp.html"><img src="ref/sighup.png" width="40px" height="40px"></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="cart.php"><img src="Ref/cart.png" width="40px" height="40px"></a>

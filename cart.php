@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+$_SESSION['cart'] ??= [];
+$cartMessage = '';
+
 $username = "root";
 $password = "";
 $db = new PDO('mysql:host=127.0.0.1;port=3307;dbname=hardware_store;charset=utf8mb4', $username, $password);
@@ -14,35 +17,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
   $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
   if ($product) {
+    if (!isset($_POST['update_quantity'])) {
+      $quantity += $_SESSION['cart'][$productId]['quantity'] ?? 0;
+    }
     $_SESSION['cart'][$productId] = [
       'id' => $product['id'],
       'title' => $product['title'],
       'price' => $product['price'],
       'quantity' => $quantity
     ];
-    echo "Product added to cart.";
+    $cartMessage = "Product added to cart.";
   } else {
-    echo "Product not found.";
+    $cartMessage = "Product not found.";
   }
 }
 
-if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
-  foreach ($_SESSION['cart'] as $productId => $product) {
-    $total = $product['price'] * $product['quantity'];
-  }
-  echo "</table>";
-} else {
-  echo "Your cart is empty.";
-}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_quantity'])) {
   $productId = $_POST['id'];
   $quantity = $_POST['quantity'];
   if (isset($_SESSION['cart'][$productId])) {
     $_SESSION['cart'][$productId]['quantity'] = $quantity;
-    echo "Product quantity updated.";
+    $cartMessage = "Product quantity updated.";
   } else {
-    echo "Product is not in the cart.";
+    $cartMessage = "Product is not in the cart.";
   }
 }
 
@@ -50,9 +49,9 @@ if (isset($_GET['remove'])) {
   $productId = $_GET['remove'];
   if (isset($_SESSION['cart'][$productId])) {
     unset($_SESSION['cart'][$productId]);
-    echo "Product removed from cart.";
+    $cartMessage = "Product removed from cart.";
   } else {
-    echo "Product is not in the cart.";
+    $cartMessage = "Product is not in the cart.";
   }
 }
 ?>
@@ -97,7 +96,7 @@ if (isset($_GET['remove'])) {
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="signUp.php"><img src="ref/sighup.png" width="40px" height="40px"></a>
+              <a class="nav-link" href="signUp.html"><img src="ref/sighup.png" width="40px" height="40px"></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="cart.php"><img src="Ref/cart.png" width="40px" height="40px"></a>
@@ -119,6 +118,9 @@ if (isset($_GET['remove'])) {
       <div class="row w-100">
         <div class="col-lg-12 col-md-12 col-12">
           <h3 class="display-5 mb-2 text-center">Shopping Cart</h3>
+          <?php if (empty($_SESSION['cart'])) : ?>
+            <p class="text-center">Your cart is empty.</p>
+          <?php endif; ?>
           <p class="mb-5 text-center">
             <i class="text-info font-weight-bold"><?php
                                                   $totalItems = 0;
@@ -160,38 +162,6 @@ if (isset($_GET['remove'])) {
                   <td data-th="Quantity">
                     <input type="number" name="quantity" value="<?= $product['quantity'] ?>" min="1" class="quantity-input">
                     <button class="update-button" data-id="<?= $productId ?>">Update</button>
-
-                    <script>
-                    $(document).ready(function() {
-                      $(".update-button").click(function() {
-                        var productId = $(this).data('id');
-                        var quantity = $(this).siblings(".quantity-input").val();
-
-                        $.ajax({
-                          type: "POST",
-                          url: "update_cart.php",
-                          data: {
-                            id: productId,
-                            quantity: quantity
-                          },
-                          success: function(response) {
-                            var data = JSON.parse(response);
-                            alert(data.message);  
-
-                             
-                            var totalPrice = 0;
-                            for (var key in data.cart) {
-                              if (data.cart.hasOwnProperty(key)) {
-                                var product = data.cart[key];
-                                totalPrice += parseFloat(product.price) * parseInt(product.quantity);
-                              }
-                            }
-                            $("#subtotal-amount").text(totalPrice.toFixed(2) + " $");
-                          }
-                        });
-                      });
-                    });
-                  </script>
                   </td>
                   <td class="actions" data-th="">
                     <div class="text-right">
@@ -212,6 +182,11 @@ if (isset($_GET['remove'])) {
           ?>
           </div>
         </div>
+      </div>
+      <div id="cart-message" aria-live="polite">
+        <?php if ($cartMessage !== '') : ?>
+          <div class="alert alert-success" role="status"><?= htmlspecialchars($cartMessage, ENT_QUOTES, 'UTF-8') ?></div>
+        <?php endif; ?>
       </div>
       <div class="row mt-4 d-flex align-items-center">
         <div class="col-sm-6 order-md-2 text-right">
@@ -318,9 +293,44 @@ if (isset($_GET['remove'])) {
     </section>
   </footer>
 
+<script>
+    $(document).ready(function() {
+      var messageTimer;
+
+      function showCartMessage(message) {
+        clearTimeout(messageTimer);
+        var alertBox = $('<div class="alert alert-success" role="status"></div>').text(message);
+        $('#cart-message').html(alertBox);
+        messageTimer = setTimeout(function() {
+          alertBox.remove();
+        }, 1000);
+      }
+
+      if ($('#cart-message .alert').length) {
+        showCartMessage($('#cart-message .alert').text());
+      }
+
+      $('.update-button').click(function() {
+        var productId = $(this).data('id');
+        var quantity = $(this).siblings('.quantity-input').val();
+        $.ajax({
+          type: 'POST',
+          url: 'update_cart.php',
+          dataType: 'json',
+          data: { id: productId, quantity: quantity },
+          success: function(data) {
+            showCartMessage(data.message);
+            $('#subtotal-amount').text(Number(data.totalPrice).toFixed(2) + ' $');
+            var totalItems = 0;
+            for (var key in data.cart) {
+              totalItems += Number(data.cart[key].quantity);
+            }
+            $('.text-info.font-weight-bold').text(totalItems);
+          }
+        });
+      });
+    });
+  </script>
 </body>
 
 </html>
-
-
-

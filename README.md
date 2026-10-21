@@ -78,8 +78,8 @@ cases.php                        Case category
 power-supplies.php               Power supply category
 RAM.php                          RAM category
 storage.php                      Storage category
-logIn.php                        Login page
-signUp.php                       Registration page
+logIn.html                        Login page
+signUp.html                       Registration page
 style.css                        Custom styles
 database.sql                     Database schema and sample products
 ```
